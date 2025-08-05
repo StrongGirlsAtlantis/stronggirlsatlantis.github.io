@@ -1,0 +1,203 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strong Girl - Treinos de Musculação Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1920x600?text=Strong+Girl+Hero');
+            background-size: cover;
+            background-position: center;
+        }
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #e5e5e5;
+        }
+    </style>
+</head>
+<body class="smooth-scroll">
+    <!-- Navegação -->
+    <nav class="bg-black text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold uppercase">Strong Girl</h1>
+            <ul class="flex space-x-6 text-lg">
+                <li><a href="#inicio" class="hover:text-gray-300">Início</a></li>
+                <li><a href="#sobre" class="hover:text-gray-300">Sobre</a></li>
+                <li><a href="#servicos" class="hover:text-gray-300">Serviços</a></li>
+                <li><a href="#depoimentos" class="hover:text-gray-300">Depoimentos</a></li>
+                <li><a href="#contato" class="hover:text-gray-300">Contato</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Seção Hero -->
+    <section id="inicio" class="hero-bg text-white py-24">
+        <div class="container mx-auto text-center">
+            <h2 class="text-5xl font-bold mb-4 uppercase">O Maior Ginásio Online para Mulheres!</h2>
+            <p class="text-xl mb-6">Treine com Nair Atlantis e torne-se a versão mais forte de si mesma, sem sair de casa.</p>
+            <a href="#contato" class="btn-primary hover-scale">Experimente Agora</a>
+            <p class="text-sm mt-4">Sem obrigações iniciais</p>
+        </div>
+    </section>
+
+    <!-- Seção Sobre -->
+    <section id="sobre" class="py-16 bg-gray-900">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6 uppercase">Sobre a Strong Girl</h2>
+            <p class="text-lg max-w-2xl mx-auto mb-4">Liderada por Nair Atlantis, a Strong Girl é a sua parceira para treinos de musculação online que empoderam mulheres. Nossa missão é transformar vidas com força, confiança e saúde, tudo no conforto da sua casa.</p>
+            <p class="text-lg max-w-2xl mx-auto">Com planos personalizados e orientação especializada, Nair ajuda você a alcançar seus objetivos com motivação e resultados reais.</p>
+        </div>
+    </section>
+
+    <!-- Seção Serviços -->
+    <section id="servicos" class="bg-black py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6 uppercase">Nossos Serviços</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md hover-scale">
+                    <h3 class="text-xl font-semibold mb-4 uppercase">Planos Personalizados</h3>
+                    <p>Treinos de musculação sob medida para o seu nível e objetivos, acessíveis online a qualquer hora.</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md hover-scale">
+                    <h3 class="text-xl font-semibold mb-4 uppercase">Aulas ao Vivo</h3>
+                    <p>Sessões em tempo real com Nair Atlantis via Microsoft Teams, com orientação direta e motivadora.</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md hover-scale">
+                    <h3 class="text-xl font-semibold mb-4 uppercase">Nutrição</h3>
+                    <p>Conselhos nutricionais especializados para complementar seus treinos e maximizar resultados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Depoimentos -->
+    <section id="depoimentos" class="py-16 bg-gray-900">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6 uppercase">O Que Nossas Clientes Dizem</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <p class="italic">"Os treinos da Nair mudaram minha vida! As sessões online são práticas e me deixaram mais forte."</p>
+                    <p class="mt-4 font-semibold">- Maria S.</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <p class="italic">"A motivação da Nair e os planos personalizados me fizeram alcançar resultados incríveis!"</p>
+                    <p class="mt-4 font-semibold">- Ana L.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Dispositivos -->
+    <section id="dispositivos" class="bg-black py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6 uppercase">Treine em Qualquer Dispositivo</h2>
+            <p class="text-lg mb-6">Acesse os treinos da Strong Girl em Smart TVs, tablets, smartphones, Chromecast ou computadores, a qualquer hora.</p>
+            <div class="flex justify-center space-x-4">
+                <img src="https://via.placeholder.com/50?text=TV" alt="Smart TV" class="hover-scale">
+                <img src="https://via.placeholder.com/50?text=Tablet" alt="Tablet" class="hover-scale">
+                <img src="https://via.placeholder.com/50?text=Smartphone" alt="Smartphone" class="hover-scale">
+                <img src="https://via.placeholder.com/50?text=PC" alt="Computador" class="hover-scale">
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Contato -->
+    <section id="contato" class="bg-gray-900 py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6 uppercase">Entre em Contato</h2>
+            <p class="text-lg mb-6">Pronta para transformar seu corpo com a Strong Girl? Fale conosco agora!</p>
+            <div class="max-w-md mx-auto">
+                <input type="text" placeholder="Seu Nome" class="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white border border-gray-600" disabled>
+                <input type="email" placeholder="Seu E-mail" class="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white border border-gray-600" disabled>
+                <textarea placeholder="Sua Mensagem" class="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white border border-gray-600" rows="4" disabled></textarea>
+                <p class="text-sm mb-4">Nota: O envio do formulário está desativado nesta demonstração. Entre em contato pelo e-mail <a href="mailto:contato@stronggirl.com.br" class="underline">contato@stronggirl.com.br</a>.</p>
+                <button class="btn-primary hover-scale">Enviar Mensagem</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="bg-black text-white py-4">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Strong Girl. Todos os direitos reservados.</p>
+            <p class="mt-2">Siga-nos no <a href="#" class="underline">Facebook</a> | <a href="#" class="underline">Instagram</a></p>
+            <p class="text-sm mt-2">Versão da Plataforma 1.0</p>
+        </div>
+    </footer>
+
+    <script>
+        // Rolagem suave para links de navegação
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
